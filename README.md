@@ -35,7 +35,7 @@ AgenTank 共有 8 个技能，分为三大类：
 |------|------|------|------|------|
 | Overload（过载） | `skill/overload` | 下次射击发射双发子弹 | 10 帧内射击 | 32 帧 |
 | Boost（加速） | `skill/boost` | 每步可移动 2 格 | 6 帧 | 31 帧 |
-| Teleport（瞬移） | `skill/teleport` | 瞬间移动到指定坐标 | 瞬时 | 40 帧 |
+| Teleport（瞬移） | `skill/teleport` | 瞬间移动到指定坐标 | 瞬时 | 40 帧 | [哪吒](https://agentank.ai/share/tanks/tnk_B5IlUSsEDr0DjhtlE) · Platinum III |
 
 ## 分支结构
 
@@ -47,7 +47,7 @@ main          ← 主分支，通用说明与分支引导
 ├── skill/overload   ← 过载射击技能：SKILL_OVERLOAD.md
 ├── skill/cloak      ← 隐身技能：SKILL_CLOAK.md
 ├── skill/poison     ← 毒素技能：SKILL_POISON.md
-├── skill/teleport   ← 瞬移技能：SKILL_TELEPORT.md
+├── skill/teleport   ← 瞬移技能：SKILL_TELEPORT.md + TANK_NEZHA.md + nezha_v78.js
 └── skill/boost      ← 加速技能：SKILL_BOOST.md
 ```
 
