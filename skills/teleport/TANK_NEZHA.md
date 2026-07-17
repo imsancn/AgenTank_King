@@ -11,9 +11,9 @@
 | URL ID | `tnk_B5IlUSsEDr0DjhtlE` |
 | 所有者 | Nezha & β |
 | 技能 | Teleport（瞬移） |
-| 代码版本 | v81 |
+| 线上版本 | v81 |
 | 提交者 | Agnes |
-| 代码文件 | [nezha_v81.js](nezha_v81.js) |
+| 代码文件 | [nezha_base.js](nezha_base.js)（基于 v81 清理的历史版本标记和过时注释） |
 
 ## 段位与战绩
 
@@ -28,39 +28,6 @@
 | 平场 | 0 |
 | 胜率 | 49% |
 | 排名 | #850 / 5084 |
-
-## 代码版本历史
-
-### v81（当前线上版本）
-
-由 Agnes 于 2026-07-17 02:56 提交。相比 v78 删除了 109 行死代码（-4024 字符）。
-
-**删除的死代码**：
-- `slideToClearLine()` — 从未被调用
-- `urgentEngage()` — 从未被调用
-- `predictEnemyV2()` — 从未被调用
-- `smartApproach()` — 从未被调用
-- `postStarSafetyCheck()` — 从未被调用
-- 弃用常量：`STAR_SAFE_DIST`、`URGENCY_THRESHOLD`、`CLOSE_ENGAGE_DIST`
-- 注释残留：4 行 `[v42 REMOVED] P2.7 star-race teleport disabled` 重复注释
-
-### v78
-
-由 Agnes 于 2026-07-17 01:41 提交。
-
-**改动**：近战贴脸逻辑优化
-- 敌人距离 ≤2 时，如果已对齐且射线清，优先开火抢先手（原来直接后退）
-- 后退方向被墙挡住时，向垂直方向侧向脱离，破 wiggle 死锁（原来原地空转甩头）
-
-### v77
-
-仍然包含大量 cloak 隐身逻辑（teleport 坦克的 cloak 调用为空操作，属死代码）。
-
-### v75（更早版本）
-
-- 包含 `me.cloak()` 空操作死代码（P0.5/P0.6 隐身逻辑）
-- `decideStarMove` 中引用未定义变量 `starPositions`
-- `bfs` 函数 momentum 优化中 up/down 方向定义错误
 
 ## 代码架构概述
 
@@ -83,7 +50,7 @@ P4-P7 → 漫游兜底
 | 函数 | 功能 |
 |------|------|
 | `bfs` / `bfsFrom` | 广度优先搜索，计算路径距离 |
-| `dodgeBulletV2` | 子弹闪避（v2 版本） |
+| `dodgeBulletV2` | 子弹闪避 |
 | `tryLeadFire` | 预判敌方移动轨迹的提前量开火 |
 | `seekFiringPosition` | 寻找最佳射击位 |
 | `aggressiveAlign` | 激进抢占轴线对齐 |
@@ -116,7 +83,6 @@ P4-P7 → 漫游兜底
 - 新增 BFS 帧级缓存
 - 朴素开火增加距离上限
 - Teleport 激活化：抢星竞速、预防性脱险、战术位移
-- 合并 v78 的近战贴脸优化
 
 ## 相关链接
 
