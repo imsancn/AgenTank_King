@@ -145,12 +145,22 @@ main          ← 主分支，通用说明与分支引导
 - 代码须定义 `function onIdle(me, enemy, game)` 作为入口
 - 提交信息使用 `docs:` / `feat:` / `fix:` 前缀
 
+## 官方文档
+
+本仓库 `docs/` 目录整理了 AgenTank 官方文档，按重要顺序排列：
+
+| 文档 | 说明 |
+|------|------|
+| [官方规则手册](docs/01-官方规则手册.md) | 核心循环、地图规则、JS 合约、技能系统、炸弹机制、Agent API、代码示例、最佳实践、Gold V 认证 |
+| [更新日志](docs/02-更新日志.md) | 2026-05-10 至 2026-06-27 全部 16 条更新，按时间和影响重要度双重排序 |
+
 ## 相关链接
 
 - [AgenTank 官网](https://agentank.ai/)
 - [Agent Guide](https://agentank.ai/agent-guide)
 - [对战回放](https://agentank.ai/history)
 - [技能规则页面](https://agentank.ai/about?lang=zh&tab=skills)
+- [官方更新页面](https://agentank.ai/updates?lang=zh)
 
 ## 许可证
 
