@@ -1,70 +1,66 @@
 # AgenTank King
 
-> AgenTank 坦克大战 AI 策略仓库 — 基于官方技能体系的分支化开发与文档管理
+> AgenTank 坦克大战 AI 策略仓库 — 目录化技能管理
 
 ## 项目简介
 
 本仓库是 [AgenTank](https://agentank.ai/) 坦克大战游戏的 AI 策略代码库。AgenTank 是一款 agent-first 的坦克对战游戏：玩家创建坦克外壳，将指南和密钥交给 AI agent，由 agent 编写 JavaScript 策略进行自动对战。
 
-仓库采用**分支化技能管理**模式，每个技能拥有独立分支，包含该技能的完整说明文档和策略代码。
+## 目录结构
+
+```
+AgenTank_King/
+├── README.md                      # 本文件
+├── LICENSE
+├── docs/
+│   ├── 01-官方规则手册.md          # JS 合约、地图规则、技能系统、炸弹机制、API、示例
+│   └── 02-更新日志.md              # 按影响重要度排序的更新索引
+└── skills/
+    ├── shield/
+    │   └── SKILL_SHIELD.md
+    ├── freeze/
+    │   └── SKILL_FREEZE.md
+    ├── stun/
+    │   └── SKILL_STUN.md
+    ├── overload/
+    │   └── SKILL_OVERLOAD.md
+    ├── cloak/
+    │   └── SKILL_CLOAK.md
+    ├── poison/
+    │   └── SKILL_POISON.md
+    ├── teleport/
+    │   ├── SKILL_TELEPORT.md
+    │   └── TANK_NEZHA.md           # 哪吒坦克档案
+    └── boost/
+        └── SKILL_BOOST.md
+```
 
 ## 技能体系总览
 
-AgenTank 共有 8 个技能，分为三大类：
-
 > 技能参数可能随版本调整，最新值请查阅 [官方技能页面](https://agentank.ai/about?lang=zh&tab=skills)
 
-### 防御型
-
-| 技能 | 分支 | 效果 | 持续 | 冷却 |
-|------|------|------|------|------|
-| Shield（护盾） | `skill/shield` | 生成护盾，最多挡 2 发子弹 | 4 帧 | 25 帧 |
-| Cloak（隐身） | `skill/cloak` | 对敌方脚本不可见 | 6 帧 | 35 帧 |
-
-### 控制型
-
-| 技能 | 分支 | 效果 | 持续 | 冷却 |
-|------|------|------|------|------|
-| Freeze（冻结） | `skill/freeze` | 完全冻结敌方，无法行动 | 2 帧 | 34 帧 |
-| Stun（扰乱） | `skill/stun` | 扰乱敌方操控，指令随机化 | 6 帧 | 25 帧 |
-| Poison（毒素） | `skill/poison` | 减缓敌方行动节奏 | 4 帧 | 25 帧 |
-
-### 进攻型
-
-| 技能 | 分支 | 效果 | 持续 | 冷却 |
-|------|------|------|------|------|
-| Overload（过载） | `skill/overload` | 下次射击发射双发子弹 | 10 帧内射击 | 32 帧 |
-| Boost（加速） | `skill/boost` | 每步可移动 2 格 | 6 帧 | 31 帧 |
-| Teleport（瞬移） | `skill/teleport` | 瞬间移动到指定坐标 | 瞬时 | 40 帧 | [哪吒](https://agentank.ai/share/tanks/tnk_B5IlUSsEDr0DjhtlE) · Platinum III |
-
-## 分支结构
-
-```
-main          ← 主分支，通用说明与分支引导
-├── skill/shield     ← 护盾技能：SKILL_SHIELD.md
-├── skill/freeze     ← 冻结技能：SKILL_FREEZE.md
-├── skill/stun       ← 扰乱技能：SKILL_STUN.md
-├── skill/overload   ← 过载射击技能：SKILL_OVERLOAD.md
-├── skill/cloak      ← 隐身技能：SKILL_CLOAK.md
-├── skill/poison     ← 毒素技能：SKILL_POISON.md
-├── skill/teleport   ← 瞬移技能：SKILL_TELEPORT.md + TANK_NEZHA.md + nezha_v78.js
-└── skill/boost      ← 加速技能：SKILL_BOOST.md
-```
+| 技能 | 目录 | 类型 | 效果 | 持续 | 冷却 |
+|------|------|------|------|------|------|
+| Shield | `skills/shield/` | 防御 | 最多挡 2 发子弹 | 4 帧 | 25 帧 |
+| Cloak | `skills/cloak/` | 防御 | 对敌方脚本不可见 | 6 帧 | 35 帧 |
+| Freeze | `skills/freeze/` | 控制 | 完全冻结敌方 | 2 帧 | 34 帧 |
+| Stun | `skills/stun/` | 控制 | 扰乱敌方操控 | 6 帧 | 25 帧 |
+| Poison | `skills/poison/` | 控制 | 减缓敌方行动节奏 | 4 帧 | 25 帧 |
+| Overload | `skills/overload/` | 进攻 | 下次射击发射双发子弹 | 10 帧内射击 | 32 帧 |
+| Boost | `skills/boost/` | 进攻 | 每步可移动 2 格 | 6 帧 | 31 帧 |
+| Teleport | `skills/teleport/` | 进攻 | 瞬间移动到指定坐标 | 瞬时 | 40 帧 |
 
 ## 快速开始
 
-1. **选择技能分支**：根据你的坦克配置选择对应技能分支
-   ```bash
-   git checkout skill/shield  # 以护盾为例
-   ```
-2. **阅读技能文档**：查看分支下的 `SKILL_*.md` 文件了解详细参数和策略
+1. **阅读规则手册**：查看 [`docs/01-官方规则手册.md`](docs/01-官方规则手册.md)
+2. **选择技能**：进入 `skills/` 下对应技能目录，阅读 `SKILL_*.md`
 3. **编写策略代码**：基于技能说明编写 `onIdle` 函数
 4. **测试与发布**：通过 AgenTank API 模拟测试，验证后发布
 
 ## 开发规范
 
-- 每个技能分支只包含该技能相关的文档和代码
-- 技能说明文件统一命名为 `SKILL_<NAME>.md`
+- 技能说明文件统一命名为 `SKILL_<NAME>.md`，放在 `skills/<name>/` 目录下
+- 坦克档案等补充文件放在对应技能目录中
 - 代码须定义 `function onIdle(me, enemy, game)` 作为入口
 - 提交信息使用 `docs:` / `feat:` / `fix:` 前缀
 
