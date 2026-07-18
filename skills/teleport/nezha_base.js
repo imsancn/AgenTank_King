@@ -443,7 +443,7 @@ function _onIdle(me, enemy, game) {
 
   // === P2: 敌人有星优势 → 抢星遏制优先, 否则消灭敌人 ===
   if (enemyHasStarAdvantage && enemyVisible) {
-    // 我离星更近则先抢星断敌(直接消解劣势), 比强行交战更稳
+    // : 我离星更近则先抢星断敌(直接消解劣势), 比强行交战更稳
     if (star && Array.isArray(star) && star.length >= 2) {
       if (decideStarMove(me, mx, my, dir, star, enemyPos, enemyVisible, enemyCanFireSoon, enemyFacingDir, starLead, frame, map, isTimeout)) return;
     }
@@ -472,6 +472,40 @@ function _onIdle(me, enemy, game) {
   }
 
   // === P3: 敌人可见 → 抢先手交战（核心修复：优先于捡星）===
+  // P1.7: If star is very close and no immediate threat, collect it regardless
+  if (star && _starDistance <= 2 && !_fireLineDanger) {
+    // Very close to star, go for it even if slightly in fire line
+    if (decideStarMove(me, mx, my, dir, star, enemyPos, enemyVisible, enemyCanFireSoon, enemyFacingDir, lead, frame, map, isTimeout)) return;
+  }
+  
+  // P1.6: If star is in enemy fire line, prioritize firing to force dodge
+  if (_fireLineDanger && enemyVisible && enemyPos && enemyDist <= 8) {
+    // Try to align and fire to force enemy to dodge, creating opening for star collection
+    if (alignedFirePriority) {
+      // Already aligned, just fire
+      if (!me.bullet && !safeStatus(me).fireLocked) {
+        me.fire();
+        lastFireFrame = frame;
+        return;
+      }
+    } else {
+      // Need to align first - turn to face enemy
+      var _aimD = aimDirCheck(mx, my, enemyPos[0], enemyPos[1]);
+      if (_aimD) {
+        if (dir === _aimD) {
+          if (!me.bullet && !safeStatus(me).fireLocked) {
+            me.fire();
+            lastFireFrame = frame;
+            return;
+          }
+        } else {
+          turnTo(me, dir, _aimD);
+          return;
+        }
+      }
+    }
+  }
+  
   // Star-rush override: if star exists and I am closer, skip P3 combat and collect star
   if (star && Array.isArray(star) && star.length >= 2 && typeof star[0] === 'number') {
       var _my2star = Math.abs(mx - star[0]) + Math.abs(my - star[1]);
@@ -484,6 +518,39 @@ function _onIdle(me, enemy, game) {
       }
   }
   if (enemyVisible) {
+    // P1.6: If enemy is about to fire and I'm in line, dodge first
+    if (enemyCanFireSoon && enemyFacingDir && enemyDist <= 6) {
+      var _myInLine = false;
+      if ((enemyFacingDir === 'right' || enemyFacingDir === 'left') && my === enemyPos[1]) _myInLine = true;
+      if ((enemyFacingDir === 'up' || enemyFacingDir === 'down') && mx === enemyPos[0]) _myInLine = true;
+      
+      if (_myInLine) {
+        // Move perpendicular to fire line to dodge
+        var _perpDirs = [];
+        if (enemyFacingDir === 'right' || enemyFacingDir === 'left') {
+          _perpDirs = ['up', 'down'];
+        } else {
+          _perpDirs = ['left', 'right'];
+        }
+        
+        var _bestPerp = null;
+        for (var _pd = 0; _pd < _perpDirs.length; _pd++) {
+          var _d = _perpDirs[_pd];
+          var _nv = nextPos(mx, my, _d, map);
+          if (_nv && !isWall(_nv[0], _nv[1], map) && !isGrass(_nv[0], _nv[1], map)) {
+            _bestPerp = _d;
+            break;
+          }
+        }
+        
+        if (_bestPerp) {
+          if (dir === _bestPerp) me.go();
+          else turnTo(me, dir, _bestPerp);
+          return;
+        }
+      }
+    }
+    
     // 对齐开火优先级: 如果已在 P0b 设置了 alignedFirePriority，
     // 跳过 P3 的 seekFiringPosition/aggressiveAlign/combatMasterV2，避免它们覆盖 P0b 的 turnTo→fire 序列
     if (!alignedFirePriority) {
@@ -901,7 +968,7 @@ function findBestFiringCell(mx, my, ex, ey, map) {
 }
 
 // =================================================================
-// ===== : 敌人是否正在对齐/将对齐我（预防性隐身依据）==========
+// ===== 敌人是否正在对齐/将对齐我（预防性隐身依据）==========
 // 已在我行/列, 或历史移动方向指向我的轴 → 视为即将获得对我清晰射线
 // =================================================================
 function enemyAligningToMe(ex, ey, mx, my) {
@@ -927,7 +994,7 @@ function getEnemyMoveDir() {
 }
 
 // =================================================================
-// ===== : A 激进抢轴线（每帧朝敌轴移动，轴线选择缓存防振荡）====
+// ===== A 激进抢轴线（每帧朝敌轴移动，轴线选择缓存防振荡）====
 // 敌人可见且未对齐时，坚定朝其所在行/列移动以尽快获得射击轴线；
 // 仅缓存"选哪条轴(x/y)"，不缓存具体格子——避免 初版的左右横跳
 // =================================================================
@@ -951,7 +1018,7 @@ function aggressiveAlign(me, mx, my, dir, ex, ey, map, frame) {
 }
 
 // =================================================================
-// ===== : C anti-对齐走位（被对齐威胁且无射击窗口→脱离）========
+// ===== C anti-对齐走位（被对齐威胁且无射击窗口→脱离）========
 // 敌人已在我行/列且弹药就绪(或我低血)，而我又无法立即开火 →
 // 优先隐身打断其瞄准(P0.5已处理则兜底)；否则垂直脱离其预测射线
 // =================================================================
@@ -987,7 +1054,7 @@ function defensiveReposition(me, mx, my, dir, enemyPos, hp, frame, map) {
 }
 
 // =================================================================
-// ===== : 已对齐但被墙挡 → 沿轴滑动找清晰射线缺口 =============
+// ===== 已对齐但被墙挡 → 沿轴滑动找清晰射线缺口 =============
 // =================================================================
 // =================================================================
 // ===== P3: 战斗大师 V2（只管开火 + 护盾/控制特例，走位交给 seekFiringPosition）
@@ -1509,6 +1576,29 @@ function starInLane(stx, sty, ex, ey, edir, map) {
 
 function decideStarMove(me, mx, my, dir, star, enemyPos, enemyVisible, enemyCanFireSoon, enemyFacingDir, lead, frame, map, isTimeout) {
   if (!star || !Array.isArray(star) || star.length < 2) return false;
+  
+  // P1.6: Fire-line safety check - detect if star is in enemy fire line
+  var _fireLineDanger = false;
+  var _starDistance = Math.abs(mx - star[0]) + Math.abs(my - star[1]);
+  if (enemyVisible && enemyPos && enemyFacingDir && star) {
+    var _sx = star[0], _sy = star[1];
+    // Check if star is in enemy fire line
+    if (enemyFacingDir === 'right' || enemyFacingDir === 'left') {
+      if (_sy === enemyPos[1] && ((enemyFacingDir === 'right' && _sx > enemyPos[0]) || (enemyFacingDir === 'left' && _sx < enemyPos[0]))) {
+        // Only mark as dangerous if star is not extremely close
+        if (_starDistance > 2) {
+          _fireLineDanger = true;
+        }
+      }
+    } else if (enemyFacingDir === 'up' || enemyFacingDir === 'down') {
+      if (_sx === enemyPos[0] && ((enemyFacingDir === 'down' && _sy > enemyPos[1]) || (enemyFacingDir === 'up' && _sy < enemyPos[1]))) {
+        // Only mark as dangerous if star is not extremely close
+        if (_starDistance > 2) {
+          _fireLineDanger = true;
+        }
+      }
+    }
+  }
   var stx = star[0], sty = star[1];
   if (typeof stx !== 'number' || typeof sty !== 'number') return false;
   var mk = mx * 1000 + my;
