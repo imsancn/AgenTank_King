@@ -20,18 +20,18 @@ AgenTank_King/
     │   └── SKILL_SHIELD.md
     ├── freeze/                    # 冻结
     │   └── SKILL_FREEZE.md
-    ├── stun/                      # 扰乱
+    ├── stun/                      # 眩晕
     │   └── SKILL_STUN.md
-    ├── overload/                  # 过载
+    ├── overload/                  # 超载
     │   └── SKILL_OVERLOAD.md
     ├── cloak/                     # 隐身
     │   └── SKILL_CLOAK.md
-    ├── poison/                    # 毒素
+    ├── poison/                    # 中毒
     │   └── SKILL_POISON.md
-    ├── teleport/                  # 瞬移
+    ├── teleport/                  # 传送
     │   ├── SKILL_TELEPORT.md
-    │   ├── TANK_NEZHA.md           # [哪吒](https://agentank.ai/share/tanks/tnk_B5IlUSsEDr0DjhtlE) · Platinum II
-    │   └── nezha_base.js           # 哪吒 v81 坦克 AI 代码
+    │   ├── TANK_NEZHA.md           # [哪吒](https://agentank.ai/share/tanks/tnk_B5IlUSsEDr0DjhtlE) · Platinum III
+    │   └── nezha_base.js           # 哪吒 v95 坦克 AI 代码
     └── boost/                     # 加速
         └── SKILL_BOOST.md
 ```
@@ -45,11 +45,11 @@ AgenTank_King/
 | Shield | 护盾 | 防御 | 最多挡 2 发子弹 | 4 帧 | 25 帧 | — |
 | Cloak | 隐身 | 防御 | 对敌方脚本不可见 | 6 帧 | 35 帧 | — |
 | Freeze | 冻结 | 控制 | 完全冻结敌方 | 2 帧 | 34 帧 | — |
-| Stun | 扰乱 | 控制 | 扰乱敌方操控 | 6 帧 | 25 帧 | — |
-| Poison | 毒素 | 控制 | 减缓敌方行动节奏 | 4 帧 | 25 帧 | — |
-| Overload | 过载 | 进攻 | 下次射击发射双发子弹 | 10 帧内射击 | 32 帧 | — |
+| Stun | 眩晕 | 控制 | 扰乱敌方操控 | 6 帧 | 25 帧 | — |
+| Poison | 中毒 | 控制 | 减缓敌方行动节奏 | 4 帧 | 25 帧 | — |
+| Overload | 超载 | 进攻 | 下次射击发射双发子弹 | 10 帧内射击 | 32 帧 | — |
 | Boost | 加速 | 进攻 | 每步可移动 2 格 | 6 帧 | 31 帧 | — |
-| Teleport | 瞬移 | 进攻 | 瞬间移动到指定坐标 | 瞬时 | 40 帧 | [哪吒](https://agentank.ai/share/tanks/tnk_B5IlUSsEDr0DjhtlE) · Platinum II |
+| Teleport | 传送 | 进攻 | 瞬间移动到指定坐标 | 瞬时 | 40 帧 | [哪吒](https://agentank.ai/share/tanks/tnk_B5IlUSsEDr0DjhtlE) · Platinum III |
 
 ## 快速开始
 
